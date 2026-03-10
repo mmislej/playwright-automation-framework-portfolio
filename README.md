@@ -66,25 +66,21 @@ The diagram below shows how all the pieces of the framework connect to each othe
 ```mermaid
 flowchart TD
     subgraph CONFIG["⚙️ Configuration Layer"]
-        direction LR
         PC["playwright.config.ts"]
         TS["tsconfig.json"]
     end
 
     subgraph TESTS["🧪 Test Layer"]
-        direction LR
         SPEC["testSuite.spec.ts\n26 UI tests"]
     end
 
     subgraph FIXTURES["🔌 Fixture Layer"]
-        direction LR
         PMF["pageManagerFixture"]
         TDF["testDataFixture"]
         ACF["apiClientFixture"]
     end
 
     subgraph PAGES["📄 Page Object Layer"]
-        direction TB
         HP["HomePage"]
         LP["LoginPage"]
         SP["SignupPage"]
@@ -95,21 +91,19 @@ flowchart TD
     end
 
     subgraph UTILS["🛠️ Utility Layer"]
-        direction LR
         TDF2["TestDataFactory"]
         AC["ApiClient"]
     end
 
     subgraph EXTERNAL["🌐 External"]
-        direction LR
         SITE["automationexercise.com"]
         FAKER["Faker.js"]
     end
 
-    TESTS -->|uses| FIXTURES
-    FIXTURES --> PMF
-    FIXTURES --> TDF
-    FIXTURES --> ACF
+    CONFIG -->|configures| SPEC
+    SPEC -->|uses| PMF
+    SPEC -->|uses| TDF
+    SPEC -->|uses| ACF
     PMF -->|instantiates| PAGES
     TDF -->|uses| TDF2
     ACF -->|uses| AC
@@ -117,7 +111,6 @@ flowchart TD
     TDF2 -->|powered by| FAKER
     AC -->|calls| SITE
     PAGES -->|navigates| SITE
-    CONFIG -->|configures| TESTS
 
     style CONFIG fill:#4A5568,color:#fff,stroke:#2D3748
     style TESTS fill:#276749,color:#fff,stroke:#1C4532
