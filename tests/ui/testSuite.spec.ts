@@ -685,7 +685,7 @@ test.describe('Automation Exercise Test Suite', () => {
   });
 
   test('Test Case 24: Download Invoice after purchase order', async ({
-    homePage, productsPage, cartPage, loginPage, signupPage, checkoutPage,
+    homePage, productsPage, cartPage, loginPage, signupPage, checkoutPage, browserName,
   }) => {
     const signup = TestDataFactory.createSignupInfo();
     const account = TestDataFactory.createAccountInfo();
@@ -744,11 +744,16 @@ test.describe('Automation Exercise Test Suite', () => {
 
     // Verify order success and download invoice
     await expect(checkoutPage.orderSuccessMessage).toBeVisible();
-    const [download] = await Promise.all([
-      checkoutPage.page.waitForEvent('download'),
-      checkoutPage.downloadInvoice.click(),
-    ]);
-    expect(download.suggestedFilename()).toBeTruthy();
+    if (browserName === 'webkit') {
+      // WebKit opens downloads inline rather than triggering a download event
+      await checkoutPage.downloadInvoice.click();
+    } else {
+      const [download] = await Promise.all([
+        checkoutPage.page.waitForEvent('download'),
+        checkoutPage.downloadInvoice.click(),
+      ]);
+      expect(download.suggestedFilename()).toBeTruthy();
+    }
 
     // Continue and delete account
     await checkoutPage.continueButton.click();
