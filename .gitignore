@@ -149,3 +149,5 @@ md/
 # Claude
 .claude/
 CLAUDE.md
+.DS_Store
+FETCH_HEAD
