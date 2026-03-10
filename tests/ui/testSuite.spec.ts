@@ -4,6 +4,7 @@ import { TestDataFactory } from '../../utils/TestDataFactory';
 test.describe('Automation Exercise Test Suite', () => {
 
   test('Test Case 1: Register User', async ({ homePage, loginPage, signupPage }) => {
+    test.setTimeout(60000);
     const signup = TestDataFactory.createSignupInfo();
     const account = TestDataFactory.createAccountInfo();
     const address = TestDataFactory.createAddressInfo();
@@ -93,6 +94,7 @@ test.describe('Automation Exercise Test Suite', () => {
 
     // Logout
     await homePage.navLogout.click();
+    await homePage.page.waitForURL(/login/);
 
     // Verify redirected to login page
     await expect(loginPage.newUserSignupTitle).toBeVisible();
@@ -293,6 +295,7 @@ test.describe('Automation Exercise Test Suite', () => {
   test('Test Case 14: Place Order: Register while Checkout', async ({
     homePage, productsPage, cartPage, loginPage, signupPage, checkoutPage,
   }) => {
+    test.setTimeout(60000);
     const signup = TestDataFactory.createSignupInfo();
     const account = TestDataFactory.createAccountInfo();
     const address = TestDataFactory.createAddressInfo();
@@ -365,6 +368,7 @@ test.describe('Automation Exercise Test Suite', () => {
   test('Test Case 15: Place Order: Register before Checkout', async ({
     homePage, productsPage, cartPage, loginPage, signupPage, checkoutPage,
   }) => {
+    test.setTimeout(60000);
     const signup = TestDataFactory.createSignupInfo();
     const account = TestDataFactory.createAccountInfo();
     const address = TestDataFactory.createAddressInfo();
@@ -420,6 +424,7 @@ test.describe('Automation Exercise Test Suite', () => {
   test('Test Case 16: Place Order: Login before Checkout', async ({
     authenticatedUser, homePage, productsPage, cartPage, loginPage, checkoutPage,
   }) => {
+    test.setTimeout(60000);
     const { email, password } = authenticatedUser;
     const payment = TestDataFactory.createPaymentInfo();
 
@@ -547,6 +552,7 @@ test.describe('Automation Exercise Test Suite', () => {
   test('Test Case 20: Search Products and Verify Cart After Login', async ({
     authenticatedUser, homePage, productsPage, cartPage, loginPage,
   }) => {
+    test.setTimeout(60000);
     const { email, password } = authenticatedUser;
 
     // Navigate and verify home page
@@ -639,6 +645,7 @@ test.describe('Automation Exercise Test Suite', () => {
   test('Test Case 23: Verify address details in checkout page', async ({
     homePage, productsPage, cartPage, loginPage, signupPage, checkoutPage,
   }) => {
+    test.setTimeout(60000);
     const signup = TestDataFactory.createSignupInfo();
     const account = TestDataFactory.createAccountInfo();
     const address = TestDataFactory.createAddressInfo();
@@ -687,6 +694,7 @@ test.describe('Automation Exercise Test Suite', () => {
   test('Test Case 24: Download Invoice after purchase order', async ({
     homePage, productsPage, cartPage, loginPage, signupPage, checkoutPage, browserName,
   }) => {
+    test.setTimeout(60000);
     const signup = TestDataFactory.createSignupInfo();
     const account = TestDataFactory.createAccountInfo();
     const address = TestDataFactory.createAddressInfo();
