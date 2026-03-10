@@ -753,8 +753,9 @@ test.describe('Automation Exercise Test Suite', () => {
     // Verify order success and download invoice
     await expect(checkoutPage.orderSuccessMessage).toBeVisible();
     if (browserName === 'webkit') {
-      // WebKit opens downloads inline rather than triggering a download event
+      // WebKit navigates to the file inline instead of triggering a download event
       await checkoutPage.downloadInvoice.click();
+      await checkoutPage.page.goBack();
     } else {
       const [download] = await Promise.all([
         checkoutPage.page.waitForEvent('download'),
