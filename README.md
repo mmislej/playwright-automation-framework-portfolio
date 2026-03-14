@@ -1,6 +1,7 @@
 # Playwright Automation Framework
 
 ![Playwright Tests](https://github.com/mmislej/playwright-automation-framework-portfolio/actions/workflows/playwright.yml/badge.svg?branch=master)
+[![View Test Report](https://img.shields.io/badge/Test%20Report-View%20Latest-blue?logo=playwright)](https://mmislej.github.io/playwright-automation-framework-portfolio/)
 
 A professional end-to-end test automation framework built to verify that a real e-commerce website works correctly from a user's perspective. Every time a change is made to the website, this framework can automatically run a full suite of tests to confirm nothing is broken — across three different browsers, in parallel, without any manual effort.
 
