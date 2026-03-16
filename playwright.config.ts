@@ -1,7 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -14,24 +13,35 @@ export default defineConfig({
     timeout: 15000,
   },
   use: {
-    baseURL: 'https://automationexercise.com',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
 
   projects: [
+    // UI tests — all browsers, fully parallel
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      testDir: './tests/ui',
+      use: { ...devices['Desktop Chrome'], baseURL: 'https://automationexercise.com' },
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      testDir: './tests/ui',
+      use: { ...devices['Desktop Firefox'], baseURL: 'https://automationexercise.com' },
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      testDir: './tests/ui',
+      use: { ...devices['Desktop Safari'], baseURL: 'https://automationexercise.com' },
+    },
+
+    // API tests — chromium only, serial
+    {
+      name: 'api',
+      testDir: './tests/api',
+      fullyParallel: false,
+      use: { ...devices['Desktop Chrome'], baseURL: 'https://automationexercise.com/api' },
     },
   ],
 });

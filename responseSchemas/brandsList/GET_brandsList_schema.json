@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "required": ["responseCode", "brands"],
+  "properties": {
+    "responseCode": { "type": "integer" },
+    "brands": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "brand"],
+        "properties": {
+          "id": { "type": "integer" },
+          "brand": { "type": "string" }
+        }
+      }
+    }
+  }
+}

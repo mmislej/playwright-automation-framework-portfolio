@@ -1,5 +1,5 @@
 import { test, expect } from '../../fixtures/apiClientFixture';
-import { TestDataFactory } from '../../utils/TestDataFactory';
+import { TestDataFactory } from '../../utils/testDataFactory';
 
 test.describe('Automation Exercise Test Suite', () => {
 
