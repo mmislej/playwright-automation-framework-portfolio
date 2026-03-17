@@ -1,5 +1,5 @@
 import { test as base } from '@playwright/test';
-import { TestDataFactory } from '../utils/TestDataFactory';
+import { TestDataFactory } from '../utils/testDataFactory';
 
 type TestDataFixtures = {
   signupData: {

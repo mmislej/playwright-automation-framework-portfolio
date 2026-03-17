@@ -62,4 +62,35 @@ export class TestDataFactory {
       expiryYear: faker.number.int({ min: 2026, max: 2035 }).toString(),
     };
   }
+
+  static createAccountRequestBody() {
+    const signup = this.createSignupInfo();
+    const account = this.createAccountInfo();
+    const address = this.createAddressInfo();
+    return {
+      name: signup.name, email: signup.email, password: account.password,
+      title: account.gender, birth_date: account.day, birth_month: account.month, birth_year: account.year,
+      firstname: address.firstName, lastname: address.lastName, company: address.company,
+      address1: address.address, address2: address.address2, country: address.country,
+      state: address.state, city: address.city, zipcode: address.zipcode, mobile_number: address.mobileNumber,
+    };
+  }
+
+  static verifyLoginRequestBody(email: string, password: string) {
+    return { email, password };
+  }
+
+  static deleteAccountRequestBody(email: string, password: string) {
+    return { email, password };
+  }
+
+  static updateAccountRequestBody(accountBody: ReturnType<typeof TestDataFactory.createAccountRequestBody>) {
+    const newAddress = this.createAddressInfo();
+    return {
+      ...accountBody,
+      firstname: newAddress.firstName, lastname: newAddress.lastName, company: newAddress.company,
+      address1: newAddress.address, address2: newAddress.address2, country: newAddress.country,
+      state: newAddress.state, city: newAddress.city, zipcode: newAddress.zipcode, mobile_number: newAddress.mobileNumber,
+    };
+  }
 }

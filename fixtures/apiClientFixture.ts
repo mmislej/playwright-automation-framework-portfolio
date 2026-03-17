@@ -1,6 +1,6 @@
 import { test as base, mergeTests } from '@playwright/test';
-import { ApiClient } from '../utils/ApiClient';
-import { TestDataFactory } from '../utils/TestDataFactory';
+import { ApiClient } from '../utils/apiClient';
+import { TestDataFactory } from '../utils/testDataFactory';
 import { test as pageManagerTest } from './pageManagerFixture';
 
 type ApiClientFixture = {

@@ -139,6 +139,121 @@ flowchart TD
 
 ---
 
+## API Testing Layer
+
+In addition to UI tests, this framework includes a dedicated API testing layer that validates the backend endpoints directly — no browser involved. It checks HTTP status codes, response body structure via JSON Schema, and business logic, using the same fixture and assertion patterns as the UI layer.
+
+### What gets tested
+
+| Endpoint | Method | What is verified |
+|---|---|---|
+| `/verifyLogin` | POST | Valid credentials return user confirmation; missing fields return 400; wrong credentials return 404 |
+| `/verifyLogin` | DELETE | Method not allowed returns 405 |
+| `/createAccount` | POST | A new account is created and returns 201 |
+| `/deleteAccount` | DELETE | An existing account is deleted and returns 200 |
+| `/updateAccount` | PUT | Account address details can be updated |
+| `/getUserDetailByEmail` | GET | Returns full user details for a given email |
+| `/productsList` | GET | Returns a non-empty list of products |
+| `/productsList` | POST | Method not allowed returns 405 |
+| `/brandsList` | GET | Returns a non-empty list of brands |
+| `/brandsList` | PUT | Method not allowed returns 405 |
+| `/searchProduct` | POST | Missing parameter returns 400 |
+
+### Architecture
+
+```mermaid
+flowchart TD
+    subgraph CONFIG["⚙️ Configuration Layer"]
+        PC["playwright.config.ts\nbaseURL + project api"]
+    end
+
+    subgraph TESTS["🧪 Test Layer"]
+        AT["auth.spec.ts\n8 API tests"]
+        PT["products.spec.ts\n6 API tests"]
+        DD["dataDrivenTestingDemo.spec.ts\n3 data-driven tests"]
+    end
+
+    subgraph FIXTURES["🔌 Fixture Layer"]
+        RHF["requestHandlerFixture\napi fixture"]
+    end
+
+    subgraph UTILS["🛠️ Utility Layer"]
+        RH["RequestHandler\nfluent builder"]
+        AL["APILogger\nrequest & response logs"]
+        CE["customExpects\nshouldEqual / shouldMatchSchema"]
+        SV["SchemaValidator\nAJV validation"]
+        TDF["TestDataFactory\nrequest bodies"]
+    end
+
+    subgraph SCHEMAS["📋 Schema Layer"]
+        RS["responseSchemas/\n9 endpoint folders\n14 schema files"]
+    end
+
+    subgraph EXTERNAL["🌐 External"]
+        API["automationexercise.com/api"]
+        FAKER["Faker.js"]
+        AJV["AJV + ajv-formats\ngenson-js"]
+    end
+
+    CONFIG -->|configures| TESTS
+    TESTS -->|imports test| RHF
+    TESTS -->|imports expect| CE
+    TESTS -->|imports| TDF
+    RHF -->|creates| RH
+    RHF -->|creates| AL
+    RH -->|logs via| AL
+    RH -->|sends requests to| API
+    CE -->|on failure reads| AL
+    CE -->|calls| SV
+    SV -->|reads| RS
+    SV -->|validates with| AJV
+    TDF -->|powered by| FAKER
+
+    style CONFIG fill:#4A5568,color:#fff,stroke:#2D3748
+    style TESTS fill:#276749,color:#fff,stroke:#1C4532
+    style FIXTURES fill:#744210,color:#fff,stroke:#5F370E
+    style UTILS fill:#6B2D8B,color:#fff,stroke:#553C9A
+    style SCHEMAS fill:#2B4A8A,color:#fff,stroke:#1A365D
+    style EXTERNAL fill:#2D3748,color:#aaa,stroke:#4A5568
+```
+
+### How it works
+
+**RequestHandler** — A fluent builder class that wraps Playwright's `APIRequestContext`. Requests are built by chaining methods and executed with a single call that validates the HTTP status automatically.
+
+```typescript
+const body = await api
+  .path('/verifyLogin')
+  .body({ email: 'user@example.com', password: '123456' })
+  .postRequest(200);
+```
+
+**APILogger** — Records every request and response during a test. When an assertion fails, the full log is automatically included in the error message so you can see exactly what was sent and received.
+
+**SchemaValidator** — Validates response bodies against JSON Schema files using AJV. Each endpoint has its own schema file in `responseSchemas/`. If the API starts returning unexpected fields or missing required data, the validation catches it immediately.
+
+**customExpects** — Custom Playwright matchers that include the API log in every failure message. `shouldMatchSchema` validates the full response structure; `shouldEqual` checks individual field values.
+
+**TestDataFactory** — Provides static methods that return complete request body objects for each endpoint, powered by Faker.js for fresh random data on every run.
+
+### Data-driven testing
+
+`dataDrivenTestingDemo.spec.ts` shows how to run the same test logic with multiple input/output combinations. A dataset array defines the scenarios and a `for...of` loop generates one independent test per entry — adding a new case requires only a new object in the array.
+
+```typescript
+const verifyLoginCases = [
+  { desc: 'missing email returns 400',        body: { password: 'abc' },                        responseCode: 400 },
+  { desc: 'missing password returns 400',     body: { email: 'x@x.com' },                       responseCode: 400 },
+  { desc: 'invalid credentials returns 404',  body: { email: 'x@x.com', password: 'wrong' },    responseCode: 404 },
+];
+
+for (const { desc, body, responseCode, message } of verifyLoginCases) {
+  test(desc, async ({ api }) => { ... });
+}
+```
+
+---
+
 ## How to run the tests
 
 ```bash
