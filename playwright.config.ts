@@ -13,7 +13,7 @@ export default defineConfig({
     timeout: 15000,
   },
   use: {
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
