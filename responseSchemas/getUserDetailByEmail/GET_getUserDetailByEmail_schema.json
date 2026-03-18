@@ -9,7 +9,7 @@
       "properties": {
         "id": { "type": "integer" },
         "name": { "type": "string" },
-        "email": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
         "title": { "type": "string" },
         "birth_day": { "type": "string" },
         "birth_month": { "type": "string" },
